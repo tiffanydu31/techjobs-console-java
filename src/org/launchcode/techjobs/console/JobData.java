@@ -26,7 +26,7 @@ public class JobData {
      * @param field The column to retrieve values from
      * @return List of all of the values of the given field
      */
-    public static ArrayList<String> findAll(String field) {
+    public static ArrayList<String> findAllField(String field) {
 
         // load data, if not already loaded
         loadData();
@@ -41,18 +41,23 @@ public class JobData {
             }
         }
 
+        sortData(values);
+
         return values;
     }
 
-    public static ArrayList<HashMap<String, String>> findAll() {
+    public static ArrayList<HashMap<String, String>> findAll(String sortChoice) {
 
         // load data, if not already loaded
         loadData();
+        sortData(allJobs, sortChoice);
 
-        return allJobs;
+        return copyData(allJobs);
+
+
     }
 
-    public static ArrayList<HashMap<String, String>> findByValue(String value) {
+    public static ArrayList<HashMap<String, String>> findByValue(String value, String sortChoice) {
         loadData();
         ArrayList<HashMap<String, String>> jobs = new ArrayList<>();
         for (HashMap<String, String> row : allJobs) {
@@ -66,7 +71,9 @@ public class JobData {
                 jobs.add(row);
             }
         }
-        return jobs;
+
+        sortData(jobs, sortChoice);
+        return copyData(jobs);
     }
 
     /**
@@ -80,7 +87,7 @@ public class JobData {
      * @param value Value of teh field to search for
      * @return List of all jobs matching the criteria
      */
-    public static ArrayList<HashMap<String, String>> findByColumnAndValue(String column, String value) {
+    public static ArrayList<HashMap<String, String>> findByColumnAndValue(String column, String value, String sortChoice) {
 
         // load data, if not already loaded
         loadData();
@@ -96,7 +103,9 @@ public class JobData {
             }
         }
 
-        return jobs;
+         sortData(jobs, sortChoice);
+
+        return copyData(jobs);
     }
 
     /**
@@ -140,4 +149,23 @@ public class JobData {
         }
     }
 
+    public static void sortData(ArrayList<HashMap<String, String>> jobs, String sortByKey) {
+        Collections.sort(jobs, new Comparator<Map<String, String>>() {
+            @Override
+            public int compare(final Map<String, String> map1, final Map<String, String> map2) {
+                // Do your sorting...
+                return (map1.get(sortByKey).compareTo(map2.get(sortByKey)));
+            }
+        });
+    }
+
+    public static void sortData(ArrayList<String> values) {
+        Collections.sort(values);
+    }
+
+    public static ArrayList<HashMap<String, String>> copyData(ArrayList<HashMap<String, String>> originalJobs) {
+        ArrayList<HashMap<String, String>> copiedJobs = new ArrayList<>(originalJobs);
+
+        return copiedJobs;
+    }
 }

@@ -27,6 +27,14 @@ public class TechJobs {
         actionChoices.put("search", "Search");
         actionChoices.put("list", "List");
 
+        // Sort by options
+        HashMap<String, String> sortChoices = new HashMap<>();
+        sortChoices.put("core competency", "Skill");
+        sortChoices.put("employer", "Employer");
+        sortChoices.put("location", "Location");
+        sortChoices.put("position type", "Position Type");
+        sortChoices.put("name", "Name");
+
         System.out.println("Welcome to LaunchCode's TechJobs App!");
 
         // Allow the user to search until they manually quit
@@ -39,10 +47,13 @@ public class TechJobs {
                 String columnChoice = getUserSelection("List", columnChoices);
 
                 if (columnChoice.equals("all")) {
-                    printJobs(JobData.findAll());
+
+                    String sortChoice = getUserSelection("Sort by", sortChoices);
+                    printJobs(JobData.findAll(sortChoice));
+
                 } else {
 
-                    ArrayList<String> results = JobData.findAll(columnChoice);
+                    ArrayList<String> results = JobData.findAllField(columnChoice);
 
                     System.out.println("\n*** All " + columnChoices.get(columnChoice) + " Values ***");
 
@@ -61,10 +72,13 @@ public class TechJobs {
                 System.out.println("\nSearch term: ");
                 String searchTerm = in.nextLine();
 
+                // Sort by
+                String sortChoice = getUserSelection("Sort by", sortChoices);
+
                 if (searchField.equals("all")) {
-                    printJobs(JobData.findByValue(searchTerm));
+                    printJobs(JobData.findByValue(searchTerm, sortChoice));
                 } else {
-                    printJobs(JobData.findByColumnAndValue(searchField, searchTerm));
+                    printJobs(JobData.findByColumnAndValue(searchField, searchTerm, sortChoice));
                 }
             }
         }
@@ -119,6 +133,7 @@ public class TechJobs {
                 for (Map.Entry<String, String> job : listing.entrySet()) {
                     System.out.println(job.getKey() + ": " + job.getValue());
                 }
+                System.out.println("******\n");
             }
         }
     }
